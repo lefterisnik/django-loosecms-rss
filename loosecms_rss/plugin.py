@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-from django.utils.translation import ugettext_lazy as _
-from django.template import loader
 from django.contrib import admin
+from django.utils.translation import ugettext_lazy as _
 
 from .models import *
 from .forms import *
@@ -28,12 +27,11 @@ class RssPlugin(PluginModelAdmin):
     extra_initial_help = None
     fields = ('type', 'placeholder', 'title', 'published')
 
-    def render(self, context, manager):
+    def update_context(self, context, manager):
         rsss = Rss.objects.select_related().filter(manager=manager, published=True).order_by('order')
 
-        t = loader.get_template(self.template)
         context['rsss'] = rsss
-        return t.render(context)
+        return context
 
     def get_changeform_initial_data(self, request):
         initial = {}
