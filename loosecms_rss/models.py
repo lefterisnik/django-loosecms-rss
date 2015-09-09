@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 from django.utils.translation import ugettext_lazy as _
-from django.utils import timezone
 from django.db import models
+
 from loosecms.models import Plugin
+from loosecms.fields import UploadFilePathField
 
 
 class RssManager(Plugin):
+    default_type = 'RssManagerPlugin'
+
     title = models.CharField(_('title'), max_length=200,
                              help_text=_('Give the name of the rss manager.'))
     ctime = models.DateTimeField(auto_now_add=True)
@@ -26,7 +29,7 @@ class Rss(models.Model):
     timeout = models.IntegerField(_('timeout'),
                                   help_text=_('Give the timeout to reload rss. If the values is 0, each time will begin '
                                               'request to feed url to download rss content(adding delaying).'))
-    image = models.ImageField(_('image'), upload_to='rss', null=True)
+    image = UploadFilePathField(_('image'), upload_to='rss', path='rss', blank=True)
 
     manager = models.ForeignKey(RssManager, verbose_name=_('manager'),
                                 help_text=_('Select the rss manager.'))
